@@ -5,32 +5,45 @@
 
 using namespace std;
 
+void updateEntities(Entity *&entities, const int size);
+
 int main()
 {
 	srand(time(NULL));
 	const int count = 100;
-	Entity *(entities)[count];
+	Entity *entities = new Entity[count];
 
 	for (int i = 0; i < count; i++) {
 		float x = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 5.0f));
 		float y = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 5.0f));
 		float z = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / 5.0f));
-		float range = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-		entities[i] = new Entity(x, y, z);
-		entities[i]->setAggroRange(range);
+		float range = static_cast <float> (rand()) / static_cast <float> (RAND_MAX / 1.5f);
+		entities[i] = Entity(x, y, z);
+		entities[i].setAggroRange(range);
 	}
 
-	for (int i = 0; i < 5; i++) {
-		cout << "Vector " << i + 1 << ":" << endl;
-		cout << "x: " << entities[i]->getPosition()[0] << endl;
-		cout << "y: " << entities[i]->getPosition()[1] << endl;
-		cout << "z: " << entities[i]->getPosition()[2] << endl;
-		cout << "Range: " << entities[i]->getAggroRange() << endl << endl;
-	}
+	updateEntities(entities, count);
 
-	for (int i = 0; i < count; i++) {
-		delete entities[i];
-	}
+	delete[] entities;
 
 	return 0;
+}
+
+void updateEntities(Entity *&entities, const int size) 
+{
+	for (int i = 0; i < 5; i++) {
+		float* v = entities[i].getPosition();
+		cout << "Vector " << i + 1 << ":" << endl;
+		cout << "x: " << v[0] << endl;
+		cout << "y: " << v[1] << endl;
+		cout << "z: " << v[2] << endl;
+		cout << "Range: " << entities[i].getAggroRange() << endl << endl;
+	}
+
+	for (int i = 0; i < size; i++) {
+		for (int j = i + 1; j < size; j++) {
+			if ()
+		}
+	}
+
 }

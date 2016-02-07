@@ -1,3 +1,6 @@
+#include <iostream>
+using namespace std;
+
 class Entity{
 
 public:
@@ -7,13 +10,12 @@ public:
 		entitiesInRange = 0;
 	}
 	
-	~Entity() {
-	}
-	
 	Entity(float &x, float &y, float &z) {
 		v[0] = x;
 		v[1] = y;
 		v[2] = z;
+		aggroRange = 0.0f;
+		entitiesInRange = 0;
 	}
 
 	void setAggroRange(const float &aggro) {
