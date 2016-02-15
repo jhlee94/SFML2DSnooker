@@ -5,6 +5,8 @@
 
 using namespace std;
 
+vector3 calcFinalVelocity(vector3 &u, vector3 &a, float &time);
+
 int main()
 {
 	srand(time(NULL));
@@ -33,6 +35,30 @@ int main()
 		cout << "z: " << v.z << endl << endl;
 	}
 
+	float x1, y1, z1, x2, y2, z2, time;
+
+	cout << "Enter initial velocity (x, y, z): " << endl;
+	cin >> x1;
+	cin >> y1;
+	cin >> z1;
+	cout << "Enter acceleration (x, y, z): " << endl;
+	cin >> x2;
+	cin >> y2;
+	cin >> z2;
+	cout << "Enter time: ";
+	cin >> time;
+
+	vector3 v_fin = calcFinalVelocity(vector3(x1, y1, z1), vector3(x2, y2, z2), time);
+
+	cout << "Final velocity:" << endl
+		<< "x: " << v_fin.x << endl
+		<< "y: " << v_fin.y << endl
+		<< "z: " << v_fin.z << endl;
+
 	delete[] vectors;
 	return 0;
+}
+
+vector3 calcFinalVelocity(vector3 &u, vector3 &a, float &time) {
+	return u + (a*time);
 }
