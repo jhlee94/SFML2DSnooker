@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Entity", "Entity\Entity.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lab2", "Lab2\Lab2.vcxproj", "{D5DD72CE-F915-4444-B9C9-C073B15A4934}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Snooker", "Snooker\Snooker.vcxproj", "{9CECC90F-9177-4668-A00C-296C0D8D4ACF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +23,10 @@ Global
 		{D5DD72CE-F915-4444-B9C9-C073B15A4934}.Debug|Win32.Build.0 = Debug|Win32
 		{D5DD72CE-F915-4444-B9C9-C073B15A4934}.Release|Win32.ActiveCfg = Release|Win32
 		{D5DD72CE-F915-4444-B9C9-C073B15A4934}.Release|Win32.Build.0 = Release|Win32
+		{9CECC90F-9177-4668-A00C-296C0D8D4ACF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9CECC90F-9177-4668-A00C-296C0D8D4ACF}.Debug|Win32.Build.0 = Debug|Win32
+		{9CECC90F-9177-4668-A00C-296C0D8D4ACF}.Release|Win32.ActiveCfg = Release|Win32
+		{9CECC90F-9177-4668-A00C-296C0D8D4ACF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

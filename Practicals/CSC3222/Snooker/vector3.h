@@ -1,4 +1,3 @@
-#pragma once
 #include <smmintrin.h>
 
 // Simple vector class

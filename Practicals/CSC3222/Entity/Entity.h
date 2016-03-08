@@ -38,7 +38,7 @@ public:
 	
 	~Entity() {
 		delete v;
-		v = NULL;
+		v = nullptr;
 	}
 	
 	Entity(float &x, float &y, float &z) {

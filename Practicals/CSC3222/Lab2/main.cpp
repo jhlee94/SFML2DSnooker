@@ -1,11 +1,9 @@
-#include "vector3.h"
+#include "SuvatCalc.h"
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
 
 using namespace std;
-
-vector3 calcFinalVelocity(vector3 &u, vector3 &a, float &time);
 
 int main()
 {
@@ -48,7 +46,7 @@ int main()
 	cout << "Enter time: ";
 	cin >> time;
 
-	vector3 v_fin = calcFinalVelocity(vector3(x1, y1, z1), vector3(x2, y2, z2), time);
+	vector3 v_fin = SuvatCalc::calFinVelocity(vector3(x1, y1, z1), vector3(x2, y2, z2), time);
 
 	cout << "Final velocity:" << endl
 		<< "x: " << v_fin.x << endl
@@ -56,9 +54,6 @@ int main()
 		<< "z: " << v_fin.z << endl;
 
 	delete[] vectors;
-	return 0;
-}
 
-vector3 calcFinalVelocity(vector3 &u, vector3 &a, float &time) {
-	return u + (a*time);
+	return 0;
 }
