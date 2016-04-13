@@ -4,7 +4,7 @@
 
 #define BALL_NUM 22
 #define FORCE_LIMIT 800.f
-#define FRICTION 0.4f
+#define FRICTION -0.4f
 
 #define RED_X (WIDTH/2 - 250.f)
 #define RED_Y (HEIGHT/2.f)

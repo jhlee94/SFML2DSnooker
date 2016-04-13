@@ -60,6 +60,9 @@ int main(int argc, char** argv)
 	glutInitWindowPosition(100, 100);
 	glutCreateWindow("Snooker 2D");
 	glewInit();
+	std::cout << "Press [f] to show/hide FPS" << std::endl;
+	std::cout << "Press [r] to reset the simulation" << std::endl;
+	std::cout << "Press [q] to quit the simulation" << std::endl;
 	initDisplay();
 	reset();
 	initResources();
