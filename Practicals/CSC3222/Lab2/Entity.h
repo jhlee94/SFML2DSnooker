@@ -7,6 +7,7 @@ public:
 		v = new vector3();
 		aggroRange = 0.0f;
 		entitiesInRange = 0;
+		mass = 0.0f;
 	}
 
 	~Entity() {
@@ -14,7 +15,7 @@ public:
 		v = nullptr;
 	}
 
-	Entity(float &x, float &y, float &z) {
+	Entity(float x, float y, float z) {
 		v = new vector3(x, y, z);
 	}
 
@@ -53,5 +54,6 @@ private:
 	vector3 *v;
 	float aggroRange;
 	int entitiesInRange;
+	float mass;
 };
 

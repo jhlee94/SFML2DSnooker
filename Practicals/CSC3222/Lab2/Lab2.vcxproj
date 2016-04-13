@@ -77,13 +77,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Entity.h" />
-    <ClInclude Include="SuvatCalc.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameTimer.h" />
+    <ClInclude Include="LeePhysics.h" />
     <ClInclude Include="vector3.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="SuvatCalc.cpp" />
+    <ClCompile Include="LeePhysics.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
