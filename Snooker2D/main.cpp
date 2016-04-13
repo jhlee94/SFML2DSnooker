@@ -6,23 +6,22 @@
 #include "BallPhysics.h"
 
 // Options
-bool showFPS = false, showMag = false;
+bool showFPS = false, showMag = false, time_step = false;
 
 // FPS
 int frameCount = 0, currentTime, previousTime = 0, fps;
 const float dt_fixed = 1.f / 60.f; // 60fps
 
-// Real Time
+// Real Time dt calculation
 int currentFrame, lastFrame = 0,  dt;
 
 // Game Logic
-enum { DRAW_NULL, DRAW_AIM, DRAW_SHOT };
+enum { SIMULATING, AIM, SHOT };
 int shotTime, mode;
 int mouseX, mouseY, mag;
-bool placed, p1, p2;
-bool firstTouch, secondTouch, touched, stationary, scored;
+bool placed, p1, p2; // Player logic bools
+bool firstTouch, secondTouch, touched, stationary, scored, dzone;
 int colour;
-bool dzone = false;
 
 // Game Entities;
 Table table;
@@ -60,8 +59,10 @@ int main(int argc, char** argv)
 	glutInitWindowPosition(100, 100);
 	glutCreateWindow("Snooker 2D");
 	glewInit();
+	std::cout << "\n\n\nWelcome to 2D Snooker Simulator\n\n";
 	std::cout << "Press [f] to show/hide FPS" << std::endl;
 	std::cout << "Press [r] to reset the simulation" << std::endl;
+	std::cout << "Press [t] to change the time_step" << std::endl;
 	std::cout << "Press [q] to quit the simulation" << std::endl;
 	initDisplay();
 	reset();
@@ -104,10 +105,10 @@ void display(void)
 		balls[i].draw();
 	}
 
-	if (mode == DRAW_SHOT && glutGet(GLUT_ELAPSED_TIME) - shotTime > 50) {
-		mode = DRAW_NULL;
+	if (mode == SHOT && glutGet(GLUT_ELAPSED_TIME) - shotTime > 50) {
+		mode = SIMULATING;
 	}
-	else if (mode != DRAW_NULL && placed) {
+	else if (mode != SIMULATING && placed) {
 		drawMagnitude(showMag);
 		drawCue();
 		drawGuide();
@@ -134,6 +135,7 @@ void clean()
 void idle()
 {
 	calculateFPS();
+
 
 	//Animate Balls
 	slide();
@@ -162,7 +164,7 @@ void mouseFunc(int button, int state, int x, int y)
 	if (button == GLUT_LEFT_BUTTON)
 	{
 		if (state == GLUT_DOWN) {
-			std::cout << "Mouse clicked @(" << x << "," << HEIGHT - y + SCORE_SECTION << ")" << std::endl;
+			//std::cout << "Mouse clicked @(" << x << "," << HEIGHT - y + SCORE_SECTION << ")" << std::endl;
 			mouseX = x;
 			mouseY = HEIGHT - y + SCORE_SECTION;
 			// White ball is not on the table
@@ -203,11 +205,11 @@ void mouseFunc(int button, int state, int x, int y)
 					balls[0].setPosition(static_cast<float>(x), static_cast<float>(HEIGHT + SCORE_SECTION - y));
 					placed = true;
 					showMag = true;
-					mode = DRAW_AIM;
+					mode = AIM;
 				}
 			} // White ball is on the table
 			else {
-				mode = DRAW_AIM;
+				mode = AIM;
 				showMag = true;
 			}
 		}
@@ -222,13 +224,11 @@ void mouseFunc(int button, int state, int x, int y)
 					if (ratio.x > 1.0f) ratio.x = 1.0f;
 					if (ratio.y > 1.0f) ratio.y = 1.0f;
 					balls[0].setVelocity(ratio.x * FORCE_LIMIT*new_vel.x, ratio.y * FORCE_LIMIT*new_vel.y);
-					mode = DRAW_SHOT;
+					mode = SHOT;
 					showMag = false;
 					shotTime = glutGet(GLUT_ELAPSED_TIME);
 					firstTouch = !firstTouch;
 					secondTouch = !secondTouch;
-					std::cout << firstTouch << std::endl;
-					std::cout << secondTouch << std::endl;
 				}
 			}
 		}
@@ -263,11 +263,13 @@ void keyboard(unsigned char key, int x, int y) {
 		reset();
 		initResources();
 		break;
-	case 'f':
-		if (!showFPS)
-			showFPS = true;
-		else
-			showFPS = false;
+	case 'f': showFPS = !showFPS;
+		break;
+	case 't':
+		time_step = !time_step;
+		if (time_step) std::cout << "Variable time step" << std::endl;
+		else std::cout << "Fixed time step" << std::endl;
+		break;
 	}
 }
 
@@ -278,7 +280,7 @@ void reset()
 	player1.clear();
 	player2.clear();
 	shotTime = 0;
-	mode = DRAW_NULL;
+	mode = SIMULATING;
 	mouseX = -100;
 	mouseY = -100;
 	mag = 0;
@@ -292,6 +294,7 @@ void reset()
 	p1 = true;
 	p2 = false;
 	dzone = false;
+	time_step = false;
 }
 
 void initResources()
@@ -360,6 +363,13 @@ void calculateFPS()
 
 	//  Get the number of milliseconds since glutInit called
 	//  (or first call to glutGet(GLUT ELAPSED TIME)).
+	//lastFrame = glutGet(GLUT_ELAPSED_TIME);
+
+	// variable DT
+	currentFrame = glutGet(GLUT_ELAPSED_TIME);
+	dt = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+
 	currentTime = glutGet(GLUT_ELAPSED_TIME);
 	//  Calculate time passed
 	int timeInterval = currentTime - previousTime;
@@ -420,7 +430,7 @@ void drawGuide()
 void drawCue()
 {
 	float front_scale, end_scale;
-	if (mode == DRAW_AIM) {
+	if (mode == AIM) {
 		front_scale = .3f;
 		end_scale = 3.f;
 	}
@@ -455,6 +465,7 @@ void drawMagnitude(bool draw)
 
 void drawScore()
 {
+	// Draw Score Panel
 	glBegin(GL_TRIANGLE_FAN);
 	glColor3f(0.5, 0.5, 0.5);
 	glVertex2i(0, HEIGHT);
@@ -463,6 +474,7 @@ void drawScore()
 	glVertex2i(0, HEIGHT + SCORE_SECTION);
 	glEnd();
 
+	// Player 1 Score list
 	int score_p1 = 0, score_p2 = 0;
 	std::string s;
 	s = "Player 1";
@@ -479,6 +491,7 @@ void drawScore()
 		score_p1 += player1[i].m_colour;
 	}
 
+	// Player 2 Score list
 	std::string s2;
 	s2 = "Player 2";
 	if (p2)	glColor3f(0, 1, 0);
@@ -494,6 +507,7 @@ void drawScore()
 		score_p2 += player2[i].m_colour;
 	}
 
+	// Numeric Score string
 	std::string scores;
 	scores = std::to_string(score_p1) + " : " + std::to_string(score_p2);
 	glColor3f(1, 1, 1);
@@ -565,7 +579,7 @@ void logic()
 	}
 	
 	// once all balls stopped, check for game logic flags
-	if (stationary && mode != DRAW_AIM){
+	if (stationary && mode != AIM){
 		
 		// white ball didn't touch any balls
 		if (!touched)
@@ -608,7 +622,7 @@ void logic()
 		}
 		touched = false;
 		scored = false;
-		mode = DRAW_AIM;
+		mode = AIM;
 		showMag = true;
 	}
 
@@ -618,20 +632,16 @@ void logic()
 // Physics Step
 void slide()
 {
-	// variable DT
-	currentFrame = glutGet(GLUT_ELAPSED_TIME);
-	dt = currentFrame - lastFrame;
-	lastFrame = currentFrame;
-
 	if (placed){
 		for (unsigned int i = 0; i < balls.size(); i++){
-			BallPhysics::updateBall(&balls[i], dt_fixed);
+			BallPhysics::updateBall(&balls[i], (!time_step) ? dt_fixed : dt*0.001f);
 		}
 
 		for (unsigned int i = 0; i < balls.size(); i++)
 		{
 			for (unsigned int j = i + 1; j < balls.size(); j++)
 			{
+				// Ball - Ball Collision detection & response
 				//Broad Phase AABB
 				if (BallPhysics::AABBball(&balls[i], &balls[j])) {
 					//Narrow Phase
@@ -653,9 +663,11 @@ void slide()
 					}
 				}
 			}	
-				// Broad Phase AABB
+
+			// Ball - Cushion Collision detection & response
+			// Broad Phase AABB
 			if (BallPhysics::AABBcushion(&balls[i], table)) { // only if true then
-				//Narrow Phase
+			//Narrow Phase
 				BallPhysics::checkBounds(&balls[i], table); 
 			}
 		}
